@@ -1,9 +1,24 @@
 import React, { useState } from 'react'
+import * as Yup from 'yup'
+import { useFormik } from 'formik'
 
 function Login(props) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
+  const formik = useFormik({
+    initialValues: {
+      password: '',
+      email: '',
+    },
+    validationSchema: Yup.object({
+      password: Yup.string()
+        .min(6, 'Must be 6 characters or more')
+        .max(15, 'Must be 15 characters or less')
+        .required('Password required'),
+      email: Yup.string()
+        .email('Invalid email address')
+        .required('Email address required'),
+    }),
+    onSubmit: (values) => {},
+  })
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -28,7 +43,12 @@ function Login(props) {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" action="#" method="POST">
+          <form
+            onSubmit={formik.handleSubmit}
+            className="space-y-6"
+            action="#"
+            method="POST"
+          >
             <div>
               <label
                 htmlFor="email"
@@ -38,7 +58,9 @@ function Login(props) {
               </label>
               <div className="mt-1">
                 <input
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.email}
                   id="email"
                   name="email"
                   type="email"
@@ -46,6 +68,11 @@ function Login(props) {
                   required
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                {formik.touched.email && formik.errors.email ? (
+                  <div className="text-red-500 font-bold text-xs mt-1">
+                    {formik.errors.email}
+                  </div>
+                ) : null}
               </div>
             </div>
 
@@ -61,11 +88,18 @@ function Login(props) {
                   id="password"
                   name="password"
                   type="password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.password}
                   autoComplete="current-password"
                   required
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                {formik.touched.password && formik.errors.password ? (
+                  <div className="text-red-500 font-bold text-xs mt-1">
+                    {formik.errors.password}
+                  </div>
+                ) : null}
               </div>
             </div>
 
