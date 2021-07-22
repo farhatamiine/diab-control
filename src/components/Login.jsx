@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
+import { withRouter } from 'react-router-dom'
 
 function Login(props) {
   const formik = useFormik({
@@ -17,7 +18,10 @@ function Login(props) {
         .email('Invalid email address')
         .required('Email address required'),
     }),
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      //TODO: wiring the form with state
+      props.history.push('/dashboard')
+    },
   })
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -218,4 +222,4 @@ function Login(props) {
   )
 }
 
-export default Login
+export default withRouter(Login)
